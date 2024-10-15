@@ -1859,9 +1859,9 @@ class RequestHandler:
                 self.finish()
             del result
             del method
-            print('HANDLER EXITING')
+            #print('HANDLER EXITING')
         except Exception as e:
-            print('HANDLER EXCEPTION')
+            #print('HANDLER EXCEPTION')
             try:
                 self._handle_request_exception(e)
             except Exception:

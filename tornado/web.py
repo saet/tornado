@@ -135,6 +135,27 @@ _HeaderTypes = Union[bytes, unicode_type, int, numbers.Integral, datetime.dateti
 
 _CookieSecretTypes = Union[str, bytes, Dict[int, str], Dict[int, bytes]]
 
+HTTP_METHODS_MAP = {
+    "GET": "get",
+    "POST": "post",
+    "PUT": "put",
+    "DELETE": "delete",
+    "PATCH": "patch",
+    "HEAD": "head",
+    "OPTIONS": "options",
+    "CONNECT": "connect",
+    "TRACE": "trace",
+    "PROPFIND": "propfind",
+    "PROPPATCH": "proppatch",
+    "MKCOL": "mkcol",
+    "COPY": "copy",
+    "MOVE": "move",
+    "LOCK": "lock",
+    "UNLOCK": "unlock",
+    "REPORT": "report",
+    "CHECKOUT": "checkout",
+    "MERGE": "merge"
+}
 
 MIN_SUPPORTED_SIGNED_VALUE_VERSION = 1
 """The oldest signed value version supported by this version of Tornado.
@@ -1828,7 +1849,7 @@ class RequestHandler:
                 except iostream.StreamClosedError:
                     return
 
-            method_name = sys.intern(self.request.method.lower())
+            method_name = HTTP_METHODS_MAP[self.request.method]
             method = getattr(self, method_name)
             del method_name
             result = method(*self.path_args, **self.path_kwargs)

@@ -1828,13 +1828,19 @@ class RequestHandler:
                 except iostream.StreamClosedError:
                     return
 
-            method = getattr(self, self.request.method.lower())
+            method_name = sys.intern(self.request.method.lower())
+            method = getattr(self, method_name)
+            del method_name
             result = method(*self.path_args, **self.path_kwargs)
             if result is not None:
                 result = await result
             if self._auto_finish and not self._finished:
                 self.finish()
+            del result
+            del method
+            print('HANDLER EXITING')
         except Exception as e:
+            print('HANDLER EXCEPTION')
             try:
                 self._handle_request_exception(e)
             except Exception:

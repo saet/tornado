@@ -139,6 +139,27 @@ _HeaderTypes = Union[bytes, unicode_type, int, numbers.Integral, datetime.dateti
 
 _CookieSecretTypes = Union[str, bytes, Dict[int, str], Dict[int, bytes]]
 
+HTTP_METHODS_MAP = {
+    "GET": "get",
+    "POST": "post",
+    "PUT": "put",
+    "DELETE": "delete",
+    "PATCH": "patch",
+    "HEAD": "head",
+    "OPTIONS": "options",
+    "CONNECT": "connect",
+    "TRACE": "trace",
+    "PROPFIND": "propfind",
+    "PROPPATCH": "proppatch",
+    "MKCOL": "mkcol",
+    "COPY": "copy",
+    "MOVE": "move",
+    "LOCK": "lock",
+    "UNLOCK": "unlock",
+    "REPORT": "report",
+    "CHECKOUT": "checkout",
+    "MERGE": "merge"
+}
 
 MIN_SUPPORTED_SIGNED_VALUE_VERSION = 1
 """The oldest signed value version supported by this version of Tornado.
@@ -1784,13 +1805,19 @@ class RequestHandler(object):
                 except iostream.StreamClosedError:
                     return
 
-            method = getattr(self, self.request.method.lower())
+            method_name = HTTP_METHODS_MAP[self.request.method]
+            method = getattr(self, method_name)
+            del method_name
             result = method(*self.path_args, **self.path_kwargs)
             if result is not None:
                 result = await result
             if self._auto_finish and not self._finished:
                 self.finish()
+            del result
+            del method
+            #print('HANDLER EXITING')
         except Exception as e:
+            #print('HANDLER EXCEPTION')
             try:
                 self._handle_request_exception(e)
             except Exception:

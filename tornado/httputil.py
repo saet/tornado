@@ -880,6 +880,7 @@ def format_timestamp(
     dt = datetime.datetime.fromtimestamp(time_num, datetime.timezone.utc)
     # Format the datetime object using strftime in RFC 2822 format
     rfc2822_string = dt.strftime('%a, %d %b %Y %H:%M:%S GMT')
+    del dt
     #return email.utils.formatdate(time_num, usegmt=True)
     return rfc2822_string
 

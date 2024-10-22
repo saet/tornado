@@ -352,8 +352,8 @@ class RequestHandler(object):
         #    "Date": date_header,
         #}
         #del date_header
-        #self._headers = httputil.HTTPHeaders(headers)
         #del headers
+        self._headers = httputil.HTTPHeaders(dict())
         self.set_default_headers()
         self._write_buffer = []  # type: List[bytes]
         self._status_code = 200

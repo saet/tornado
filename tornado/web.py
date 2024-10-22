@@ -344,13 +344,14 @@ class RequestHandler(object):
 
     def clear(self) -> None:
         """Resets all headers and content for this response."""
-        self._headers = httputil.HTTPHeaders(
-            {
-                "Server": "TornadoServer/%s" % tornado.version,
-                "Content-Type": "text/html; charset=UTF-8",
-                "Date": httputil.format_timestamp(time.time()),
-            }
-        )
+        #self._headers = httputil.HTTPHeaders(
+        #    {
+        #        "Server": "TornadoServer/%s" % tornado.version,
+        #        "Content-Type": "text/html; charset=UTF-8",
+        #        "Date": httputil.format_timestamp(time.time()),
+        #    }
+        #)
+        self._headers = httputil.HTTPHeaders(dict())
         self.set_default_headers()
         self._write_buffer = []  # type: List[bytes]
         self._status_code = 200

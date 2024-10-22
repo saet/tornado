@@ -873,7 +873,15 @@ def format_timestamp(
         time_num = calendar.timegm(ts.utctimetuple())
     else:
         raise TypeError("unknown timestamp type: %r" % ts)
-    return email.utils.formatdate(time_num, usegmt=True)
+    
+    print("tornado/httputil format_timestamp")
+    # replicate the pyhton/email/utils.formatdate
+    # with a simple strftime
+    dt = datetime.datetime.fromtimestamp(time_num, datetime.timezone.utc)
+    # Format the datetime object using strftime in RFC 2822 format
+    rfc2822_string = dt.strftime('%a, %d %b %Y %H:%M:%S GMT')
+    #return email.utils.formatdate(time_num, usegmt=True)
+    return rfc2822_string
 
 
 RequestStartLine = collections.namedtuple(

@@ -344,13 +344,15 @@ class RequestHandler(object):
 
     def clear(self) -> None:
         """Resets all headers and content for this response."""
-        self._headers = httputil.HTTPHeaders(
-            {
-                "Server": "TornadoServer/%s" % tornado.version,
-                "Content-Type": "text/html; charset=UTF-8",
-                "Date": httputil.format_timestamp(time.time()),
-            }
-        )
+        date_header = httputil.format_timestamp(time.time())
+        headers = {
+            "Server": "TornadoServer/%s" % tornado.version,
+            "Content-Type": "text/html; charset=UTF-8",
+            "Date": date_header,
+        }
+        del date_header
+        self._headers = httputil.HTTPHeaders(headers)
+        del headers
         self.set_default_headers()
         self._write_buffer = []  # type: List[bytes]
         self._status_code = 200
@@ -431,9 +433,10 @@ class RequestHandler(object):
             retval = value.decode("latin1")
         elif isinstance(value, numbers.Integral):
             # return immediately since we know the converted value will be safe
-            return str(value)
+            retval = str(value)
         elif isinstance(value, datetime.datetime):
-            return httputil.format_timestamp(value)
+            print('tornado/web/_convert_header_value')
+            retval = httputil.format_timestamp(value)
         else:
             raise TypeError("Unsupported header value %r" % value)
         # If \n is allowed into the header, it is possible to inject
@@ -672,7 +675,10 @@ class RequestHandler(object):
                 days=expires_days
             )
         if expires:
-            morsel["expires"] = httputil.format_timestamp(expires)
+            print("tornado/web/set_cookie")
+            expire_str_date = httputil.format_timestamp(expires)
+            morsel["expires"] = expire_str_date
+            del expire_str_date
         if path:
             morsel["path"] = path
         if max_age:
@@ -697,6 +703,7 @@ class RequestHandler(object):
                 "(should be lowercase)",
                 DeprecationWarning,
             )
+        del morsel
 
     def clear_cookie(self, name: str, **kwargs: Any) -> None:
         """Deletes the cookie with the given name.

@@ -874,7 +874,7 @@ def format_timestamp(
     else:
         raise TypeError("unknown timestamp type: %r" % ts)
     
-    print("tornado/httputil format_timestamp")
+    gen_log.info("tornado/httputil format_timestamp")
     # replicate the pyhton/email/utils.formatdate
     # with a simple strftime
     dt = datetime.datetime.fromtimestamp(time_num, datetime.timezone.utc)

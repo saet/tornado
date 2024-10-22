@@ -435,7 +435,7 @@ class RequestHandler(object):
             # return immediately since we know the converted value will be safe
             retval = str(value)
         elif isinstance(value, datetime.datetime):
-            print('tornado/web/_convert_header_value')
+            gen_log.info('tornado/web/_convert_header_value')
             retval = httputil.format_timestamp(value)
         else:
             raise TypeError("Unsupported header value %r" % value)
@@ -675,7 +675,7 @@ class RequestHandler(object):
                 days=expires_days
             )
         if expires:
-            print("tornado/web/set_cookie")
+            gen_log.info("tornado/web/set_cookie")
             expire_str_date = httputil.format_timestamp(expires)
             morsel["expires"] = expire_str_date
             del expire_str_date

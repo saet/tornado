@@ -344,6 +344,7 @@ class RequestHandler(object):
 
     def clear(self) -> None:
         """Resets all headers and content for this response."""
+        gen_log.info("tornado/web/RequestHandler.clear")
         date_header = httputil.format_timestamp(time.time())
         headers = {
             "Server": "TornadoServer/%s" % tornado.version,
